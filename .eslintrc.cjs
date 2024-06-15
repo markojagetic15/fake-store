@@ -5,11 +5,11 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
-    "airbnb",
-    "airbnb-typescript",
-    "airbnb/hooks",
-    "plugin:react/recommended",
-    "standard-with-typescript",
+    'airbnb',
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:react/recommended',
+    'standard-with-typescript',
     'plugin:prettier/recommended'
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
@@ -21,6 +21,24 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
-  include: ['src', '.eslintrc.cjs']
-
-}
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        paths: ['src']
+      },
+      alias: {
+        map: [
+          ['@entities', './src/entities'],
+          ['@widgets', './src/widgets'],
+          ['@components', './src/components'],
+        ],
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      }
+    },
+    react: {
+      version: 'detect',
+    },
+  },
+  include: ['src/**/*', '.eslintrc.js'],
+};
