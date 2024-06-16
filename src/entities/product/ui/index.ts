@@ -1,1 +1,1 @@
-export * from './Product.tsx'
+export * from './Product'

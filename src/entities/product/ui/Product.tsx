@@ -1,7 +1,7 @@
 import { IProduct } from '../model'
-import { AccordionItem } from '@components/AccordionItem'
+import { Card } from '@components/Card'
 import { Button } from '@components/Button'
-import { Checkbox } from '@components/Checkbox'
+import { useAppSelector } from '@redux/hooks'
 
 interface IProps {
   product: IProduct
@@ -9,18 +9,18 @@ interface IProps {
 }
 
 export const Product = (props: IProps) => {
+  // ** Redux state **
+  const isSelection = useAppSelector((state) => state.global.isSelection)
+
   return (
-    <div className='flex flex-col relative'>
-      <Checkbox
-        checked={!!props.product.selected}
-        onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          props.handleSelection(props.product.id)
-        }}
-        className='absolute top-1.5 left-1.5'
-      />
-      <AccordionItem
+    <div
+      className={`p-0 flex flex-col relative cursor-pointer rounded-md ${props.product.selected ? 'outline outline-2 outline-midnight' : ''}`}
+      onClick={() => {
+        if (!isSelection) return
+        props.handleSelection(props.product.id)
+      }}
+    >
+      <Card
         title={props.product.title}
         category={props.product.category}
         price={props.product.price}

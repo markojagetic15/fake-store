@@ -1,6 +1,7 @@
 export { Button } from './Button'
 export { Dropdown } from './Dropdown'
 export { DropdownItem } from './DropdownItem'
-export { AccordionItem } from './AccordionItem'
+export { Card } from './Card'
 export { Input } from './Input'
 export { Checkbox } from './Checkbox'
+export { Spinner } from './Spinner'
