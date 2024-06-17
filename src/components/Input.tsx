@@ -11,7 +11,7 @@ interface IProps {
 export const Input = (props: IProps) => {
   return (
     <div
-      className={`flex gap-2 text-black box-border ${props.width ? `w-${props.width}` : 'w-full'} bg-white shadow-black inline-flex h-[35px] appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA6`}
+      className={`flex gap-2 text-black ${props.width ? `max-w-${props.width}` : 'w-full'} bg-white shadow-black inline-flex h-[35px] appearance-none items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black] selection:color-white selection:bg-blackA6`}
     >
       {props.startIcon}
 
