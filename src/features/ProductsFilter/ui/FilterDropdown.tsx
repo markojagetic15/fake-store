@@ -1,8 +1,8 @@
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { DropdownItem } from '@components/DropdownItem'
 import { Dropdown } from '@components/Dropdown'
 import { PRICE_FILTERS, useFilter } from '@features/ProductsFilter'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 export const FilterDropdown = () => {
   const _filter = useFilter()
@@ -16,7 +16,7 @@ export const FilterDropdown = () => {
       }
     >
       <div className='text-black font-bold text-[13px] leading-none px-[5px] p-2'>By category</div>
-      {[..._filter.sortedCategories].map((category) => {
+      {[..._filter.categories]?.map((category) => {
         return (
           <DropdownItem
             onSelect={() => _filter.filterItemsByCategory(category)}
@@ -32,7 +32,6 @@ export const FilterDropdown = () => {
       })}
       <DropdownMenu.Separator className='h-[1px] bg-black m-[5px]' />
       <div className='text-black font-bold text-[13px] leading-none px-[5px] p-2'>By price</div>
-
       {[...PRICE_FILTERS].map((priceRange) => {
         return (
           <DropdownItem

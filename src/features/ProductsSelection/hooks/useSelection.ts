@@ -1,17 +1,18 @@
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { setItems } from '@redux/reducers/productsSlice'
+import { setIsSelection, setItems } from '@redux/reducers/productsSlice'
 import { useEffect, useState } from 'react'
 
 export const useSelection = () => {
   const [price, setPrice] = useState(0)
   // ** Redux state **
   const products = useAppSelector((state) => state.global.products)
+  const isSelection = useAppSelector((state) => state.global.isSelection)
 
   // ** Hooks **
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const selectedPrice = products.map((product) => {
+    const selectedPrice = products?.map((product) => {
       if (product.selected) {
         return product.price
       }
@@ -20,7 +21,7 @@ export const useSelection = () => {
 
     const totalPrice = selectedPrice.reduce((acc, price) => acc + price, 0)
 
-    setPrice(totalPrice.toFixed(2) as any)
+    setPrice(parseFloat(totalPrice.toFixed(2)))
   }, [products])
 
   const handleSelection = (id: number) => {
@@ -34,8 +35,30 @@ export const useSelection = () => {
     dispatch(setItems(selectedProduct))
   }
 
+  const removeSelection = () => {
+    const selectedProduct = products.map((product) => {
+      if (product.selected) {
+        return { ...product, selected: false }
+      }
+      return product
+    })
+
+    dispatch(setItems(selectedProduct))
+    setPrice(0)
+  }
+
+  const handleIsSelection = () => {
+    if (isSelection) {
+      removeSelection()
+    }
+    dispatch(setIsSelection(!isSelection))
+  }
+
   return {
     handleSelection,
     price,
+    removeSelection,
+    isSelection,
+    handleIsSelection,
   }
 }

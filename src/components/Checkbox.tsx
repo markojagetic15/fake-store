@@ -14,7 +14,7 @@ export const Checkbox = (props: IProps) => {
       <CheckboxItem.Root
         checked={props.checked}
         onClick={props.onClick}
-        className={`hover:bg-midnight flex h-[18px] w-[18px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black] ${props.className}`}
+        className={`hover:bg-midnight flex h-[18px] w-[18px] appearance-none items-center justify-center rounded-[4px] bg-white border outline-none focus:shadow-[0_0_0_2px_black] ${props.className}`}
       >
         <CheckboxItem.Indicator className='text-black'>
           <CheckIcon />

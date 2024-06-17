@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import path, { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/fake-store/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,6 +14,7 @@ export default defineConfig({
       '@redux': path.resolve(__dirname, 'src/redux'),
       '@features': path.resolve(__dirname, 'src/features'),
       '@pages': path.resolve(__dirname, 'src/pages'),
+      '@services': path.resolve(__dirname, 'src/services'),
     },
   },
 })

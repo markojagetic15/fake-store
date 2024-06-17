@@ -1,63 +1,78 @@
-import { useAppDispatch } from '@redux/hooks'
-import { setItems } from '@redux/reducers/productsSlice'
 import { useEffect, useState } from 'react'
-import { PRODUCTS_LIST } from '@entities/product'
+import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { setItems, setLoading } from '@redux/reducers/productsSlice'
 import { PriceFilter } from '@features/ProductsFilter'
+import { IProduct } from '@entities/product'
+import { ProductsApi } from '@entities/product'
 
 export const useFilter = () => {
   // ** React state **
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
   const [selectedPriceFilter, setSelectedPriceFilter] = useState<PriceFilter>(PriceFilter.BEST_BUY)
-  const [loading, setLoading] = useState<boolean>(false)
+
+  // ** Redux state **
+  const categories = useAppSelector((state) => state.global.categories)
 
   // ** Hooks **
   const dispatch = useAppDispatch()
+  const productsApi = new ProductsApi()
 
   useEffect(() => {
-    let filteredItems = [...PRODUCTS_LIST]
+    const sortProducts = async () => {
+      dispatch(setLoading(true))
+      let filteredItems: IProduct[] = []
+      if (selectedFilters.length > 0) {
+        const promises = selectedFilters.map((category) =>
+          productsApi.getProductsByCategory({ category }),
+        )
 
-    if (selectedFilters.length > 0) {
-      filteredItems = filteredItems.filter((item) =>
-        selectedFilters.some((filter) => item.category.toLowerCase() === filter.toLowerCase()),
-      )
+        const productsArray = await Promise.all(promises)
+        filteredItems = productsArray.flat()
+      } else if (selectedFilters.length === 0) {
+        const response = await productsApi.getProducts()
+        if (response) {
+          filteredItems = response
+        }
+      }
+
+      if (selectedPriceFilter === PriceFilter.FROM_CHEAPEST) {
+        filteredItems.sort((a, b) => a.price - b.price)
+      } else if (selectedPriceFilter === PriceFilter.FROM_EXPENSIVE) {
+        filteredItems.sort((a, b) => b.price - a.price)
+      }
+
+      dispatch(setItems(filteredItems))
+      dispatch(setLoading(false))
     }
 
-    if (selectedPriceFilter === PriceFilter.FROM_CHEAPEST) {
-      filteredItems.sort((a, b) => a.price - b.price)
-    } else if (selectedPriceFilter === PriceFilter.FROM_EXPENSIVE) {
-      filteredItems.sort((a, b) => b.price - a.price)
-    }
-
-    dispatch(setItems(filteredItems))
+    sortProducts()
   }, [selectedFilters, selectedPriceFilter])
 
-  const categories: string[] = PRODUCTS_LIST.map((item) => item.category)
-  const sortedCategories: string[] = categories.filter(
-    (item, index) => categories.indexOf(item) === index,
-  )
-
   // ** Functions **
-  const filterItemsByCategory = (filter: string) => {
-    setLoading(true)
-    if (selectedFilters.includes(filter)) {
-      setSelectedFilters(selectedFilters.filter((selectedFilter) => selectedFilter !== filter))
-    } else {
-      setSelectedFilters([...selectedFilters, filter])
+  const filterItemsByCategory = async (category: string) => {
+    dispatch(setLoading(true))
+    const response = await productsApi.getProductsByCategory({ category })
+    if (response) {
+      dispatch(setItems(response))
     }
+
+    if (selectedFilters.includes(category)) {
+      setSelectedFilters(selectedFilters.filter((selectedFilter) => selectedFilter !== category))
+    } else {
+      setSelectedFilters([...selectedFilters, category])
+    }
+
     setLoading(false)
   }
 
   const filterItemsByPrice = (type: PriceFilter) => {
-    setLoading(true)
     setSelectedPriceFilter(type)
-    setLoading(false)
   }
 
   return {
     filterItemsByCategory,
     selectedFilters,
-    sortedCategories,
-    loading,
+    categories,
     filterItemsByPrice,
     selectedPriceFilter,
   }

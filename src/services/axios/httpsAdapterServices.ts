@@ -16,17 +16,11 @@ declare module 'axios' {
 }
 
 export class HttpAdapter {
-  handleAPIError() {
-    toast.error('Your request did not go through. Please try again later.')
+  constructor() {
+    this.setupInterceptors()
   }
 
-  handleNoInternet() {
-    if (navigator.onLine) return false
-    toast.warning("You don't have an internet connection.")
-    return true
-  }
-
-  async axiosFetch(axiosConfig: AxiosRequestConfigWithRetry): Promise<AxiosResponse | undefined> {
+  setupInterceptors() {
     axios.interceptors.response.use(
       (response) => response,
       async (err: AxiosError) => {
@@ -50,7 +44,19 @@ export class HttpAdapter {
         return axios(config)
       },
     )
+  }
 
+  handleAPIError() {
+    toast.error('Your request did not go through. Please try again later.')
+  }
+
+  handleNoInternet() {
+    if (navigator.onLine) return false
+    toast.warning("You don't have an internet connection.")
+    return true
+  }
+
+  async axiosFetch(axiosConfig: AxiosRequestConfigWithRetry): Promise<AxiosResponse | undefined> {
     try {
       const response = await axios(axiosConfig)
       if (response.status >= 200 && response.status < 300) return response
@@ -59,6 +65,15 @@ export class HttpAdapter {
     } catch (e: unknown) {
       const error = e as AxiosError
       if (this.handleNoInternet()) console.error('Error when fetching', error)
+
+      // Detailed logging for debugging
+      console.error('Axios error:', {
+        message: error.message,
+        config: error.config,
+        response: error.response,
+        request: error.request,
+      })
+
       return undefined
     }
   }
@@ -84,6 +99,26 @@ export class HttpAdapter {
       retry: 10,
       retryDelay: 1000,
     }
+  }
+
+  getDeserializedData = (response: Promise<Response>) => {
+    return response
+      .then((response) => {
+        // Check if the response is successful
+        if (!response) return null
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText)
+        }
+        // Parse the JSON body
+        return response.json()
+      })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.error('There has been a problem with your fetch operation:', error)
+      })
   }
 
   async fetchResponse(data: AxiosRequestConfig): Promise<AxiosResponse | undefined> {
