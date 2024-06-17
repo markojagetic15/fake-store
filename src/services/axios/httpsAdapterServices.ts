@@ -95,30 +95,10 @@ export class HttpAdapter {
       headers,
       onUploadProgress,
       onDownloadProgress,
-      withCredentials: true,
+      withCredentials: false,
       retry: 10,
       retryDelay: 1000,
     }
-  }
-
-  getDeserializedData = (response: Promise<Response>) => {
-    return response
-      .then((response) => {
-        // Check if the response is successful
-        if (!response) return null
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText)
-        }
-        // Parse the JSON body
-        return response.json()
-      })
-      .then((data) => {
-        return data
-      })
-      .catch((error) => {
-        // Handle any errors
-        console.error('There has been a problem with your fetch operation:', error)
-      })
   }
 
   async fetchResponse(data: AxiosRequestConfig): Promise<AxiosResponse | undefined> {

@@ -7,24 +7,23 @@ export class ProductsApi extends HttpAdapter {
   }
 
   async getProducts(): Promise<IProduct[] | null> {
-    const response = this.getDeserializedData(fetch(`https://fakestoreapi.com/products`))
+    const response = await this.GET(`https://fakestoreapi.com/products`)
 
-    if (response) return response
+    if (response) return response.data
     return null
   }
 
   async getProductsByCategory({ category }: { category: string }) {
-    const response = this.getDeserializedData(
-      fetch(`https://fakestoreapi.com/products/category/${category}`),
-    )
+    const response = await this.GET(`https://fakestoreapi.com/products/category/${category}`)
 
-    if (response) return response
+    if (response) return response.data
+    return null
   }
 
   async getAllCategories(): Promise<string[] | null> {
-    const response = this.getDeserializedData(fetch(`https://fakestoreapi.com/products/categories`))
+    const response = await this.GET(`https://fakestoreapi.com/products/categories`)
 
-    if (response) return response
+    if (response) return response.data
     return null
   }
 }
