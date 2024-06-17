@@ -12,6 +12,8 @@ This is a fake store project using Vite and TypeScript.
 
 ## Getting Started
 
+- use a node version specified in `.nvmrc` file
+
 ```bash
 # Install dependencies
 npm install
