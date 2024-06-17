@@ -6,6 +6,10 @@ interface ProductsState {
   isSelection: boolean
   categories: string[]
   loading: boolean
+  searchResults: {
+    products: IProduct[]
+    isSearch: boolean
+  }
 }
 
 const initialState = {
@@ -13,6 +17,10 @@ const initialState = {
   isSelection: false,
   categories: [],
   loading: false,
+  searchResults: {
+    products: [],
+    isSearch: false,
+  },
 } as ProductsState
 
 export const productsSlice = createSlice({
@@ -31,10 +39,20 @@ export const productsSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
+    setSearchResults: (
+      state,
+      action: PayloadAction<{
+        products: IProduct[]
+        isSearch: boolean
+      }>,
+    ) => {
+      state.searchResults = action.payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setItems, setIsSelection, setCategories, setLoading } = productsSlice.actions
+export const { setItems, setIsSelection, setCategories, setLoading, setSearchResults } =
+  productsSlice.actions
 
 export default productsSlice.reducer
