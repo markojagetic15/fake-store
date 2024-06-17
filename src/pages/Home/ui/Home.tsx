@@ -8,12 +8,10 @@ export const Home = () => {
 
   return (
     <div className='w-9/12 m-auto relative'>
-      <div className='pt-6 pb-6 flex justify-between items-center relative'>
+      <div className='pt-6 pb-6 items-center w-full flex gap-3.5 -ml-[15px]'>
         <ProductsSearch />
-        <div className='flex gap-9 items-center'>
-          <TotalPrice />
-          <FilterDropdown />
-        </div>
+        <FilterDropdown />
+        <TotalPrice />
       </div>
       <ProductsList />
     </div>

@@ -10,12 +10,12 @@ export const ProductsSearch = () => {
     <Input
       startIcon={<MagnifyingGlassIcon />}
       endIcon={_search.search && <Cross1Icon onClick={_search.removeSearch} />}
-      placeholder='Search products'
+      placeholder='Search'
       onChange={(e) => {
         _search.handleSearch(e)
       }}
       value={_search.search}
-      width='64'
+      width='1'
     />
   )
 }
