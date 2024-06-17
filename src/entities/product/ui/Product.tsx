@@ -1,4 +1,12 @@
-import { IProduct } from '../model'
+import {
+  getProductCategory,
+  getProductId,
+  getProductImage,
+  getProductPrice,
+  getProductSelected,
+  getProductTitle,
+  IProduct,
+} from '@entities/product'
 import { Card } from '@components/Card'
 import { Button } from '@components/Button'
 import { useAppSelector } from '@redux/hooks'
@@ -14,17 +22,17 @@ export const Product = (props: IProps) => {
 
   return (
     <div
-      className={`p-0 flex flex-col relative cursor-pointer rounded-md ${props.product.selected ? 'outline outline-2 outline-midnight' : ''}`}
+      className={`p-0 flex flex-col relative cursor-pointer rounded-md ${getProductSelected(props.product) ? 'outline outline-2 outline-midnight' : ''}`}
       onClick={() => {
         if (!isSelection) return
-        props.handleSelection(props.product.id)
+        props.handleSelection(getProductId(props.product))
       }}
     >
       <Card
-        title={props.product.title}
-        category={props.product.category}
-        price={props.product.price}
-        imageUrl={props.product.image}
+        title={getProductTitle(props.product)}
+        category={getProductCategory(props.product)}
+        price={getProductPrice(props.product)}
+        imageUrl={getProductImage(props.product)}
       />
       <Button>Add to cart</Button>
     </div>

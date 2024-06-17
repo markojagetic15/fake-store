@@ -1,36 +1,35 @@
 import { Product } from '@entities/product'
 import { useSelection } from '@features/ProductsSelection'
 import { useAppSelector } from '@redux/hooks'
-import { Spinner } from '@components/Spinner'
+import { Spinner } from '@components/Spinner/Spinner.tsx'
 
 export const ProductsList = () => {
-  const _selection = useSelection()
+  const { handleSelection } = useSelection()
 
   // ** Redux state **
-  const products = useAppSelector((state) => state.global.products)
-  const loading = useAppSelector((state) => state.global.loading)
+  const { products, searchResults, loading } = useAppSelector((state) => state.global)
 
-  if (loading)
+  const { products: searchProducts, isSearch } = searchResults
+  const displayProducts = isSearch ? searchProducts : products
+  const noResults = isSearch && searchProducts.length === 0
+
+  if (loading) {
     return (
       <div className='flex items-center justify-center h-screen'>
         <Spinner />
       </div>
     )
-
-  if (!products) return <div>No results</div>
+  }
 
   return (
     <div className='pt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-      {products &&
-        products.map((product) => {
-          return (
-            <Product
-              product={product}
-              key={product.id}
-              handleSelection={_selection.handleSelection}
-            />
-          )
-        })}
+      {noResults ? (
+        <div>No results</div>
+      ) : (
+        displayProducts.map((product) => (
+          <Product key={product.id} product={product} handleSelection={handleSelection} />
+        ))
+      )}
     </div>
   )
 }
